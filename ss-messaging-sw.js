@@ -1,0 +1,1 @@
+// placeholder for SmartSender push service worker
