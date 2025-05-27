@@ -4,63 +4,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enable Notifications</title>
+  <title>HerSuppps | Google Ads Expert</title>
   <script src="https://customer.smartsender.eu/js/client/push/fcm/client.js?version=latest" async></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      background-color: #f7f9fc;
+      color: #333;
+      padding: 0;
+      margin: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       text-align: center;
-      padding: 50px;
-      background: #f2f2f2;
     }
-    .alert {
-      color: red;
-      font-weight: bold;
+    h1 {
+      color: #222;
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .button {
+      display: inline-block;
       margin-top: 20px;
-    }
-    button {
+      padding: 12px 24px;
       background-color: #0073e6;
       color: white;
-      padding: 12px 20px;
-      border: none;
+      text-decoration: none;
       border-radius: 6px;
+      font-weight: bold;
       font-size: 16px;
-      margin-top: 20px;
-      cursor: pointer;
     }
-    button:hover {
+    .button:hover {
       background-color: #005bb5;
+    }
+    .wa-button {
+      margin-top: 30px;
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #25D366;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .wa-button:hover {
+      background-color: #1ebd56;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 12px;
+      color: #999;
     }
   </style>
 </head>
 <body>
-  <h1>Enable Notifications</h1>
-  <p>Click the button below to request permission for notifications.</p>
-  <button onclick="requestPermission()">Subscribe Now</button>
-
-  <div id="pwa-warning" class="alert" style="display: none;">
-    请从主屏幕图标打开此页面，以启用通知功能（iPhone Safari 限制）。
+  <div class="container">
+    <h1>Get More Clients with Google Ads</h1>
+    <p>We help plumbers, local service businesses, and small shops across the U.S. and EU attract new customers with laser-targeted Google Ads campaigns.</p>
+    <a class="button" href="https://bit.ly/3GUq91x" target="_blank">View Service on Fiverr</a>
+    <br />
+    <a class="wa-button" href="https://wa.me/17705201681?text=Hi,%20I’m%20interested%20in%20your%20Google%20Ads%20services%20from%20HerSuppps." target="_blank">Chat via WhatsApp</a>
+    <footer>&copy; 2025 HerSuppps. All rights reserved.</footer>
   </div>
-
-  <script>
-    function requestPermission() {
-      if ('Notification' in window && navigator.serviceWorker) {
-        Notification.requestPermission().then(function (permission) {
-          if (permission === 'granted') {
-            alert('Notification permission granted.');
-          } else {
-            alert('Notification permission denied.');
-          }
-        });
-      } else {
-        alert('Notifications not supported on this browser.');
-      }
-    }
-
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    if (!isStandalone) {
-      document.getElementById("pwa-warning").style.display = "block";
-    }
-  </script>
 </body>
 </html>
