@@ -16,7 +16,7 @@
     }
     .container {
       max-width: 600px;
-      margin: 40px auto;
+      margin: 40px auto 100px;
       background: #fff;
       padding: 30px;
       border-radius: 12px;
@@ -46,24 +46,27 @@
     .button:hover {
       background-color: #005bb5;
     }
-    .wa-button {
-      margin-top: 30px;
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: #25D366;
-      color: white;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    .wa-button:hover {
-      background-color: #1ebd56;
-    }
     footer {
       margin-top: 40px;
       font-size: 12px;
       color: #999;
+    }
+    .wa-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      color: white;
+      padding: 14px 18px;
+      font-size: 16px;
+      border-radius: 50px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      text-decoration: none;
+      font-weight: bold;
+      z-index: 1000;
+    }
+    .wa-float:hover {
+      background-color: #1ebd56;
     }
   </style>
 </head>
@@ -72,9 +75,9 @@
     <h1>Get More Clients with Google Ads</h1>
     <p>We help plumbers, local service businesses, and small shops across the U.S. and EU attract new customers with laser-targeted Google Ads campaigns.</p>
     <a class="button" href="https://bit.ly/3GUq91x" target="_blank">View Service on Fiverr</a>
-    <br />
-    <a class="wa-button" href="https://wa.me/17705201681?text=Hi,%20I’m%20interested%20in%20your%20Google%20Ads%20services%20from%20HerSuppps." target="_blank">Chat via WhatsApp</a>
     <footer>&copy; 2025 HerSuppps. All rights reserved.</footer>
   </div>
+
+  <a class="wa-float" href="https://wa.me/17705201681?text=Hi,%20I’m%20interested%20in%20your%20Google%20Ads%20services%20from%20HerSuppps." target="_blank">Chat via WhatsApp</a>
 </body>
 </html>
