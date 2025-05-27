@@ -2,83 +2,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HerSupps | Google Ads Expert</title>
-  <script src="https://customer.smartsender.eu/js/client/push/fcm/client.js?version=latest" async></script>
   <style>
     body {
       font-family: 'Helvetica', sans-serif;
-      background: #f7f9fc;
+      background-color: #f7f9fc;
+      color: #333;
       margin: 0;
       padding: 0;
       text-align: center;
     }
     .container {
       max-width: 600px;
-      margin: 80px auto;
+      margin: 100px auto;
       padding: 40px;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     h1 {
-      font-size: 24px;
+      font-size: 26px;
       color: #222;
+      margin-bottom: 10px;
     }
     p {
       font-size: 16px;
-      color: #555;
+      line-height: 1.6;
     }
     .button {
       display: inline-block;
-      margin-top: 25px;
-      padding: 14px 28px;
-      font-size: 16px;
-      font-weight: bold;
-      background-color: #ff5722;
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #0073e6;
       color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      animation: pulse 2s infinite;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 16px;
     }
     .button:hover {
-      background-color: #e64a19;
+      background-color: #005bb5;
     }
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7);
-      }
-      50% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 12px rgba(255, 87, 34, 0);
-      }
+    footer {
+      margin-top: 40px;
+      font-size: 12px;
+      color: #999;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Grow Your Business with Google Ads</h1>
-    <p>Enable notifications to receive updates, tips, and exclusive offers from HerSupps.</p>
-    <button class="button" onclick="subscribe()">Subscribe Now</button>
+    <h1>Get More Clients with Google Ads</h1>
+    <p>
+      We help plumbers, local service businesses, and small shops across the U.S. and EU attract new customers with laser-targeted Google Ads campaigns.
+    </p>
+    <a class="button" href="https://bit.ly/3GUq91x" target="_blank">View Service on Fiverr</a>
+    <footer>&copy; 2025 HerSupps. All rights reserved.</footer>
   </div>
-
-  <script>
-    function subscribe() {
-      if ('Notification' in window && navigator.serviceWorker) {
-        Notification.requestPermission().then(function(permission) {
-          if (permission === 'granted') {
-            alert('Notifications enabled! You’ll receive updates from HerSupps.');
-          } else {
-            alert('You declined notifications.');
-          }
-        });
-      } else {
-        alert('Notifications are not supported in this browser.');
-      }
-    }
-  </script>
 </body>
 </html>
