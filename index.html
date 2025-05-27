@@ -4,33 +4,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HerSuppps | Push Notification Test</title>
-
-  <!-- SmartSender 推送通知 SDK -->
+  <title>Enable Notifications</title>
   <script src="https://customer.smartsender.eu/js/client/push/fcm/client.js?version=latest" async></script>
-
   <style>
     body {
-      font-family: 'Helvetica', 'Arial', sans-serif;
-      background-color: #f0f2f5;
-      padding: 40px;
+      font-family: Arial, sans-serif;
       text-align: center;
+      padding: 50px;
+      background: #f2f2f2;
     }
-    h1 {
-      color: #222;
-    }
-    p {
-      font-size: 16px;
+    .alert {
+      color: red;
+      font-weight: bold;
+      margin-top: 20px;
     }
     button {
       background-color: #0073e6;
       color: white;
       padding: 12px 20px;
-      font-size: 16px;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      border-radius: 6px;
+      font-size: 16px;
       margin-top: 20px;
+      cursor: pointer;
     }
     button:hover {
       background-color: #005bb5;
@@ -39,13 +35,17 @@
 </head>
 <body>
   <h1>Enable Notifications</h1>
-  <p>Click the button below to request notification permission.</p>
+  <p>Click the button below to request permission for notifications.</p>
   <button onclick="requestPermission()">Subscribe Now</button>
+
+  <div id="pwa-warning" class="alert" style="display: none;">
+    请从主屏幕图标打开此页面，以启用通知功能（iPhone Safari 限制）。
+  </div>
 
   <script>
     function requestPermission() {
       if ('Notification' in window && navigator.serviceWorker) {
-        Notification.requestPermission().then(function(permission) {
+        Notification.requestPermission().then(function (permission) {
           if (permission === 'granted') {
             alert('Notification permission granted.');
           } else {
@@ -55,6 +55,11 @@
       } else {
         alert('Notifications not supported on this browser.');
       }
+    }
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (!isStandalone) {
+      document.getElementById("pwa-warning").style.display = "block";
     }
   </script>
 </body>
