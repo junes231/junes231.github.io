@@ -2,100 +2,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HerSupps | Google Ads Expert</title>
   <script src="https://customer.smartsender.eu/js/client/push/fcm/client.js?version=latest" async></script>
   <style>
     body {
-      font-family: 'Helvetica', 'Arial', sans-serif;
-      background-color: #f7f9fc;
-      color: #333;
-      padding: 0;
+      font-family: 'Helvetica', sans-serif;
+      background: #f7f9fc;
       margin: 0;
-    }
-    .top-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #25D366;
-      padding: 12px;
+      padding: 0;
       text-align: center;
-      z-index: 1000;
-      animation: flash 1.8s infinite;
-    }
-    @keyframes flash {
-      0%, 100% { background-color: #25D366; }
-      50% { background-color: #1ebd56; }
-    }
-    .top-bar a {
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: bold;
     }
     .container {
       max-width: 600px;
-      margin: 80px auto 60px;
+      margin: 80px auto;
+      padding: 40px;
       background: #fff;
-      padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
     h1 {
+      font-size: 24px;
       color: #222;
-      font-size: 26px;
-      margin-bottom: 10px;
     }
     p {
       font-size: 16px;
-      line-height: 1.6;
-    }
-    .prompt {
-      margin-top: 30px;
-      font-size: 15px;
-      color: #444;
+      color: #555;
     }
     .button {
       display: inline-block;
-      margin-top: 20px;
-      padding: 12px 24px;
-      background-color: #0073e6;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
+      margin-top: 25px;
+      padding: 14px 28px;
       font-size: 16px;
+      font-weight: bold;
+      background-color: #ff5722;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      animation: pulse 2s infinite;
     }
     .button:hover {
-      background-color: #005bb5;
+      background-color: #e64a19;
     }
-    footer {
-      margin-top: 40px;
-      font-size: 12px;
-      color: #999;
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 12px rgba(255, 87, 34, 0);
+      }
     }
   </style>
 </head>
 <body>
-  <div class="top-bar">
-    <a href="https://wa.me/17705201681?text=Hi%2C%20I%20m%20interested%20in%20your%20Google%20Ads%20services%20from%20HerSupps." target="_blank">Chat via WhatsApp</a>
+  <div class="container">
+    <h1>Grow Your Business with Google Ads</h1>
+    <p>Enable notifications to receive updates, tips, and exclusive offers from HerSupps.</p>
+    <button class="button" onclick="subscribe()">Subscribe Now</button>
   </div>
 
-  <div class="container">
-    <h1>Get More Clients with Google Ads</h1>
-    <p>
-      We help plumbers, local service businesses, and small shops across the U.S. and EU attract new customers with laser-targeted Google Ads campaigns.
-    </p>
-    <a class="button" href="https://bit.ly/3GUq91x" target="_blank">View Service on Fiverr</a>
-    <p class="prompt">
-      Not sure where to start? Tap the green button above to <strong>chat with me on WhatsApp</strong> directly — no Fiverr account needed!
-    </p>
-    <footer>
-      &copy; 2025 HerSupps. All rights reserved.
-    </footer>
-  </div>
+  <script>
+    function subscribe() {
+      if ('Notification' in window && navigator.serviceWorker) {
+        Notification.requestPermission().then(function(permission) {
+          if (permission === 'granted') {
+            alert('Notifications enabled! You’ll receive updates from HerSupps.');
+          } else {
+            alert('You declined notifications.');
+          }
+        });
+      } else {
+        alert('Notifications are not supported in this browser.');
+      }
+    }
+  </script>
 </body>
 </html>
