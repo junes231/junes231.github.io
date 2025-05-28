@@ -4,62 +4,124 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HerSupps | Google Ads Expert</title>
+  <title>SmartSender | Gmail Email Tool</title>
   <style>
     body {
-      font-family: 'Helvetica Neue', sans-serif;
-      background-color: #f7f9fc;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
       margin: 0;
-      padding: 0;
-      color: #333;
+      padding: 20px;
       text-align: center;
     }
-    .container {
-      max-width: 700px;
-      margin: 80px auto;
-      background: #fff;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
     h1 {
-      font-size: 26px;
       color: #0073e6;
     }
-    p {
-      font-size: 16px;
-      margin-top: 10px;
-      color: #555;
+    textarea, input[type="text"], input[type="email"], input[type="password"] {
+      width: 90%;
+      max-width: 500px;
+      margin: 10px auto;
+      display: block;
+      padding: 10px;
+      font-size: 14px;
     }
-    .button {
-      display: inline-block;
-      margin: 20px 10px;
-      padding: 14px 24px;
-      font-size: 16px;
-      background-color: #0073e6;
-      color: #fff;
+    input[type="file"] {
+      margin: 10px auto;
+    }
+    button {
+      background: #0073e6;
+      color: white;
+      padding: 12px 20px;
       border: none;
       border-radius: 6px;
-      text-decoration: none;
+      font-size: 16px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005bb5;
+    }
+    .section {
+      background: white;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
       font-weight: bold;
-    }
-    .button:hover {
-      background-color: #005bb5;
-    }
-    footer {
-      font-size: 12px;
-      color: #aaa;
-      margin-top: 40px;
+      margin-top: 10px;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Grow Your Business with Google Ads</h1>
-    <p>We help small businesses like plumbers, electricians, and contractors reach local customers using smart, cost-effective Google Ads campaigns.</p>
-    <a class="button" href="https://bit.ly/3GUq91x" target="_blank">📢 View Service on Fiverr</a>
-    <a class="button" href="/smart-sender">📨 Open SmartSender Tool</a>
-    <footer>&copy; 2025 HerSupps. All rights reserved.</footer>
+  <h1>📨 SmartSender Web Tool</h1>
+
+  <div class="section">
+    <label for="email">Your Gmail:</label>
+    <input type="email" id="email" placeholder="your@gmail.com" />
+
+    <label for="appPass">Gmail App Password:</label>
+    <input type="password" id="appPass" placeholder="Paste 16-digit App Password" />
+
+    <label for="subject">Email Subject:</label>
+    <input type="text" id="subject" placeholder="Email Subject" />
+
+    <label for="template">HTML Template:</label>
+    <textarea id="template" rows="10" placeholder="Paste your HTML email template here"></textarea>
+
+    <label for="csv">Upload Contacts (CSV with 'email' header):</label>
+    <input type="file" id="csv" accept=".csv" />
+
+    <button onclick="sendEmails()">🚀 Send Emails</button>
+
+    <p id="status"></p>
   </div>
+
+  <script>
+    function sendEmails() {
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('appPass').value;
+      const subject = document.getElementById('subject').value;
+      const template = document.getElementById('template').value;
+      const file = document.getElementById('csv').files[0];
+      const status = document.getElementById('status');
+      if (!email || !pass || !subject || !template || !file) {
+        status.innerText = "⚠️ Please fill in all fields and upload CSV.";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const lines = e.target.result.split("\n");
+        const headers = lines[0].split(",");
+        const emailIndex = headers.findIndex(h => h.toLowerCase().includes("email"));
+        if (emailIndex === -1) {
+          status.innerText = "❌ CSV missing 'email' column.";
+          return;
+        }
+        const emails = lines.slice(1).map(row => row.split(",")[emailIndex]).filter(e => e.includes("@"));
+        status.innerText = `Preparing to send ${emails.length} emails...`;
+
+        const form = {
+          SecureToken: "YourTokenHere",
+          To: email,
+          From: email,
+          Subject: subject,
+          Body: template,
+          Bcc: emails.join(",")
+        };
+        if (window.Email) {
+          window.Email.send(form).then(() => {
+            status.innerText = "✅ Emails sent!";
+          });
+        } else {
+          status.innerText = "❌ Email sending library not found.";
+        }
+      };
+      reader.readAsText(file);
+    }
+  </script>
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
 </body>
 </html>
