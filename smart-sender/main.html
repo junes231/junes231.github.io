@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>📧 SmartSender Pro Panel</title>
+  <style>
+    body { font-family: Arial; padding: 30px; background: #f7f9fc; }
+    h1 { color: #004aad; }
+    .section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 10px #ccc; }
+    input, textarea { width: 100%; padding: 10px; margin-top: 8px; font-size: 16px; }
+    button { padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>📧 SmartSender Pro Panel</h1>
+
+  <div class="section">
+    <h2>🔍 Step 1: Keyword Email Scraper</h2>
+    <input id="keyword" placeholder='e.g. plumbers "gmail.com"'/>
+    <button onclick="searchEmails()">Search Emails</button>
+    <textarea id="results" rows="5" placeholder="Results will appear here..."></textarea>
+    <button onclick="exportCSV()">⬇️ Export to CSV</button>
+  </div>
+
+  <div class="section">
+    <h2>👥 Step 2: Group Contacts</h2>
+    <input placeholder="Group: e.g. Plumbers, Electricians..."/>
+  </div>
+
+  <div class="section">
+    <h2>📮 Step 3: Gmail Bcc Sender</h2>
+    <input id="email" placeholder="Your Gmail"/>
+    <input id="password" placeholder="Gmail App Password"/>
+    <input id="subject" placeholder="Email Subject"/>
+    <textarea id="template" rows="5" placeholder="Plain text or HTML content here..."></textarea>
+    <button onclick="sendEmails()">🚀 Send with Bcc</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    function searchEmails() {
+      const kw = document.getElementById('keyword').value;
+      if (!kw) return alert("Enter keywords");
+      document.getElementById('results').value = `${kw}_contact1@gmail.com\n${kw}_info@gmail.com\n...demo only...`;
+    }
+
+    function exportCSV() {
+      const csvContent = document.getElementById('results').value;
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "emails.csv";
+      link.click();
+    }
+
+    function sendEmails() {
+      const emails = document.getElementById("results").value.split("\n").filter(Boolean);
+      const form = {
+        SecureToken: "YourTokenHere",
+        To: document.getElementById("email").value,
+        From: document.getElementById("email").value,
+        Subject: document.getElementById("subject").value,
+        Body: document.getElementById("template").value,
+        Bcc: emails.join(",")
+      };
+      if (window.Email) {
+        window.Email.send(form).then(() => {
+          document.getElementById("status").innerText = "✅ Emails Sent!";
+        });
+      } else {
+        document.getElementById("status").innerText = "❌ Email.js not loaded.";
+      }
+    }
+  </script>
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+</body>
+</html>
