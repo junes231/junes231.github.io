@@ -2,118 +2,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>SmartSender Pro</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 20px; margin: 0; }
-    h1 { color: #0073e6; text-align: center; }
-    .section {
-      background: white; padding: 20px; margin: 20px auto;
-      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 800px;
-    }
-    input, textarea, select, button {
-      display: block; width: 100%; margin-top: 10px; font-size: 14px;
-      padding: 10px; border-radius: 5px; border: 1px solid #ccc;
-    }
-    button {
-      background-color: #0073e6; color: white; font-weight: bold; cursor: pointer;
-      border: none; margin-top: 15px;
-    }
-    button:hover { background-color: #005bb5; }
-    .output { white-space: pre-wrap; background: #f9f9f9; padding: 10px; margin-top: 10px; border: 1px solid #ddd; border-radius: 6px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartSender Pro Panel</title>
 </head>
 <body>
-  <h1>📨 SmartSender Pro Panel</h1>
+  <h2>📧 SmartSender Pro Panel</h2>
+  <h3>🔍 Step 1: Keyword Email Scraper</h3>
+  <input type="text" placeholder='plumbers "gmail.com"'><br>
+  <button>Search Emails</button><br>
+  <textarea placeholder="Results..."></textarea><br>
+  <button>⬇️ Export to CSV</button>
 
-  <div class="section">
-    <h3>🔍 Step 1: Keyword Email Scraper</h3>
-    <input type="text" id="query" placeholder='e.g. plumbers "gmail.com" near New York' />
-    <button onclick="searchEmails()">Search Emails</button>
-    <div id="emailResult" class="output">Results will appear here...</div>
-    <button onclick="exportCSV()">⬇ Export to CSV</button>
-  </div>
+  <h3>👥 Step 2: Group Contacts</h3>
+  <div>Plumbers</div>
 
-  <div class="section">
-    <h3>👥 Step 2: Group Contacts</h3>
-    <select id="groupSelect">
-      <option value="plumbers">Plumbers</option>
-      <option value="electricians">Electricians</option>
-      <option value="painters">Painters</option>
-      <option value="custom">➕ Custom Group...</option>
-    </select>
-    <input type="text" id="customGroup" style="display:none;" placeholder="Enter custom group name" />
-  </div>
-
-  <div class="section">
-    <h3>📤 Step 3: Gmail Bcc Sender</h3>
-    <input type="email" id="fromEmail" placeholder="Your Gmail" />
-    <input type="password" id="appPassword" placeholder="Gmail App Password" />
-    <input type="text" id="subject" placeholder="Email Subject" />
-    <textarea id="message" rows="6" placeholder="Plain text or HTML content here..."></textarea>
-    <button onclick="sendEmails()">🚀 Send with Bcc</button>
-    <div id="sendStatus" class="output"></div>
-  </div>
-
-  <script>
-    const apiKey = "018a0f03ef6785f521d3d449086c7c9e189a14f63628f0ce5c6410ad7a991663";
-
-    async function searchEmails() {
-      const query = document.getElementById("query").value;
-      const resultBox = document.getElementById("emailResult");
-      resultBox.textContent = "Searching Google...";
-
-      const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&api_key=${apiKey}`;
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (!data.organic_results) return resultBox.textContent = "No results.";
-
-      const urls = data.organic_results.map(r => r.link);
-      const emails = new Set();
-
-      for (let link of urls.slice(0, 5)) {
-        try {
-          const html = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(link))
-            .then(res => res.json()).then(data => data.contents);
-          const found = [...html.matchAll(/[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}/g)].map(m => m[0]);
-          found.forEach(e => emails.add(e));
-        } catch (e) { console.log("Error with", link); }
-      }
-
-      if (emails.size === 0) resultBox.textContent = "No emails found.";
-      else resultBox.textContent = [...emails].join("\n");
-    }
-
-    function exportCSV() {
-      const content = document.getElementById("emailResult").textContent.trim();
-      if (!content) return alert("No emails to export.");
-      const blob = new Blob(["email\n" + content], {{ type: "text/csv" }});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "emails.csv";
-      a.click();
-    }
-
-    function sendEmails() {
-      const emails = document.getElementById("emailResult").textContent.trim().split("\n").filter(e => e.includes("@"));
-      const sender = document.getElementById("fromEmail").value;
-      const password = document.getElementById("appPassword").value;
-      const subject = document.getElementById("subject").value;
-      const body = document.getElementById("message").value;
-      const status = document.getElementById("sendStatus");
-
-      if (!emails.length || !sender || !password || !subject || !body) {
-        return status.textContent = "⚠ Please complete all fields and search results.";
-      }
-
-      status.textContent = `Pretending to send Bcc to ${emails.length} contacts (Demo only)... ✅`;
-    }
-
-    document.getElementById("groupSelect").addEventListener("change", function () {
-      const custom = document.getElementById("customGroup");
-      custom.style.display = this.value === "custom" ? "block" : "none";
-    });
-  </script>
+  <h3>📮 Step 3: Gmail Bcc Sender</h3>
+  <input type="email" placeholder="Your Gmail"><br>
+  <input type="password" placeholder="Gmail App Password"><br>
+  <input type="text" placeholder="Email Subject"><br>
+  <textarea placeholder="Email content..."></textarea><br>
+  <button>🚀 Send with Bcc</button>
 </body>
 </html>
