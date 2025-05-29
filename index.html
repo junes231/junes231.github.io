@@ -1,14 +1,31 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HerSupps Google Ads</title>
+  <meta charset="UTF-8">
+  <title>Protected Page</title>
+  <style>
+    body {{ font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f4; }}
+    .login {{ background: white; padding: 2em; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }}
+    input {{ padding: 0.5em; margin-top: 1em; width: 100%; }}
+  </style>
 </head>
-<body style="text-align:center; font-family:sans-serif; padding:2em;">
-  <h1>Get More Clients with Google Ads</h1>
-  <p>We help plumbers, local service businesses, and small shops across the U.S. and EU attract new customers with laser-targeted Google Ads campaigns.</p>
-  <a href="/smart-sender/" style="display:inline-block; padding:10px 20px; background:#007bff; color:#fff; text-decoration:none; border-radius:5px;">Enter SmartSender</a>
-  <p style="margin-top:3em; color:gray;">© 2025 HerSupps. All rights reserved.</p>
+<body>
+  <div class="login">
+    <h2>Enter Password</h2>
+    <input type="password" id="password" placeholder="Enter password">
+    <button onclick="checkPassword()">Enter</button>
+  </div>
+  <script>
+    const correct = "hersupps2025";  // 密码
+    function checkPassword() {{
+      const pw = document.getElementById('password').value;
+      if (pw === correct) {{
+        window.location.href = "./smart-sender/main.html";
+      }} else {{
+        alert("Incorrect password");
+      }}
+    }}
+  </script>
 </body>
 </html>
