@@ -1,36 +1,35 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HerSupps</title>
+  <meta charset="UTF-8">
+  <title>HerSupps | Google Ads Service</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 2em; }
+    body { font-family: sans-serif; text-align: center; padding: 40px; }
+    .btn { padding: 12px 24px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+    .hidden { display: none; }
     input[type="password"] { padding: 10px; font-size: 16px; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
   </style>
 </head>
 <body>
   <h1>Grow Your Business with Google Ads</h1>
-  <p>We help small businesses reach local customers using smart, cost-effective Google Ads campaigns.</p>
-  <a href="https://fiverr.com" target="_blank">
-    <button>📢 View Service on Fiverr</button>
-  </a>
-  <div style="margin-top:2em">
-    <p>🔐 Please enter your password</p>
-    <input type="password" id="passwordInput" placeholder="Enter password" />
-    <br/>
-    <button onclick="checkPassword()">Enter SmartSender Tool</button>
-    <p id="error" style="color:red;"></p>
+  <p>We help small businesses like plumbers, electricians, and contractors reach local customers using smart, cost-effective Google Ads campaigns.</p>
+  <a class="btn" href="https://fiverr.com/hersupps">📢 View Service on Fiverr</a><br>
+  <button class="btn" onclick="document.getElementById('pw-box').classList.remove('hidden')">🔐 Enter SmartSender Tool</button>
+
+  <div id="pw-box" class="hidden">
+    <p>Please enter your password:</p>
+    <input type="password" id="passwordInput" placeholder="Enter password"/>
+    <button class="btn" onclick="checkPassword()">Submit</button>
   </div>
+
   <script>
     function checkPassword() {
       const password = document.getElementById("passwordInput").value;
       if (password === "hersupps2025") {
-        window.location.href = "./smart-sender/main.html";
+        window.location.href = "smart-sender/main.html";
       } else {
-        document.getElementById("error").textContent = "❌ Incorrect password";
+        alert("Incorrect password.");
       }
     }
   </script>
