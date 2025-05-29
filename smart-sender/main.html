@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartSender Pro</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+    h1 { text-align: center; color: #0073e6; }
+    .section {
+      background: #fff; padding: 20px; margin: 20px auto;
+      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 700px;
+    }
+    input, textarea, select, button {
+      width: 95%; padding: 12px; margin: 10px 0;
+      font-size: 14px; border-radius: 6px; border: 1px solid #ccc;
+    }
+    button {
+      background-color: #0073e6; color: white; border: none;
+      font-weight: bold; cursor: pointer;
+    }
+    button:hover { background-color: #005bb5; }
+    .email-list { font-size: 14px; text-align: left; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>📨 SmartSender Pro WebMailer</h1>
+
+  <div class="section">
+    <h3>📥 Gmail 群发设置</h3>
+    <input type="email" id="fromEmail" placeholder="Your Gmail address" />
+    <input type="password" id="appPass" placeholder="Gmail App Password" />
+    <input type="text" id="subject" placeholder="Email Subject" />
+    <textarea id="template" rows="8" placeholder="Paste your HTML email template here"></textarea>
+    <input type="file" id="csvUpload" accept=".csv" />
+    <select id="groupSelect"><option value="">-- Optional: Choose Group --</option></select>
+    <button onclick="startSend()">🚀 Send via Bcc</button>
+    <div id="sendStatus"></div>
+  </div>
+
+  <div class="section">
+    <h3>🔍 关键词邮箱采集</h3>
+    <input type="text" id="keyword" placeholder='e.g. plumbers "gmail.com"' />
+    <button onclick="mockSearch()">Start Mock Search</button>
+    <div class="email-list" id="emailList">[Results will appear here]</div>
+    <button onclick="downloadCSV()">⬇ Export CSV</button>
+    <button onclick="addToList()">➕ Add to Gmail List</button>
+  </div>
+
+  <script src="https://smtpjs.com/v3/smtp.js"></script>
+  <script>
+    function startSend() {
+      const email = document.getElementById("fromEmail").value;
+      const pass = document.getElementById("appPass").value;
+      const subject = document.getElementById("subject").value;
+      const template = document.getElementById("template").value;
+      const file = document.getElementById("csvUpload").files[0];
+      const status = document.getElementById("sendStatus");
+
+      if (!email || !pass || !subject || !template || !file) {
+        status.innerText = "⚠️ Fill all fields and upload a CSV.";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const lines = e.target.result.split("\\n");
+        const header = lines[0].split(",");
+        const emailIdx = header.findIndex(h => h.toLowerCase().includes("email"));
+        if (emailIdx < 0) return status.innerText = "❌ No 'email' column found.";
+
+        const emails = lines.slice(1)
+          .map(row => row.split(",")[emailIdx])
+          .filter(e => e.includes("@"))
+          .filter((e, i, a) => a.indexOf(e) === i);  // 去重
+
+        const grouped = document.getElementById("groupSelect").value;
+        status.innerText = `Sending to ${emails.length} contacts${grouped ? ' in group: ' + grouped : ''}...`;
+
+        Email.send({
+          SecureToken: "YourTokenHere",
+          To: email,
+          From: email,
+          Subject: subject,
+          Body: template,
+          Bcc: emails.join(",")
+        }).then(() => status.innerText = "✅ Emails sent!");
+      };
+      reader.readAsText(file);
+    }
+
+    function mockSearch() {
+      const kw = document.getElementById("keyword").value;
+      const list = document.getElementById("emailList");
+      const sample = [
+        "plumber.john@gmail.com", "fixit2024@yahoo.com", "services@plumbingco.com"
+      ];
+      const filtered = sample.filter(e => kw === "" || e.includes(kw.split(" ")[0]));
+      list.innerText = filtered.join("\\n");
+    }
+
+    function downloadCSV() {
+      const content = document.getElementById("emailList").innerText;
+      const blob = new Blob(["email\\n" + content], {type: "text/csv"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "emails.csv";
+      a.click();
+    }
+
+    function addToList() {
+      const content = document.getElementById("emailList").innerText;
+      const csv = new Blob(["email\\n" + content], {type: "text/csv"});
+      const fileInput = document.getElementById("csvUpload");
+      const dataTransfer = new DataTransfer();
+      const file = new File([csv], "auto_import.csv", {type: "text/csv"});
+      dataTransfer.items.add(file);
+      fileInput.files = dataTransfer.files;
+    }
+  </script>
+</body>
+</html>
