@@ -2,12 +2,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SmartSender Mailer</title>
+  <meta charset="UTF-8" />
+  <title>SmartSender - Real Email Scraper</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+    h1 { color: #0073e6; }
+    .section { background: white; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 700px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input, textarea, button { width: 100%; padding: 10px; margin-top: 10px; font-size: 16px; }
+    button { background: #0073e6; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #005bb5; }
+    .emails { white-space: pre-wrap; background: #f9f9f9; padding: 10px; border: 1px solid #ccc; margin-top: 10px; }
+  </style>
 </head>
 <body>
-  <h2>SmartSender 邮件群发系统</h2>
-  <!-- 示例 -->
-  <p>功能包含关键词采集、联系人分组、密送群发等。</p>
+  <div class="section">
+    <h1>📧 Real Email Collector (via Google)</h1>
+    <input type="text" id="query" placeholder='e.g. plumbers "gmail.com" near Dallas' />
+    <button onclick="searchEmails()">Search Emails</button>
+    <div id="result" class="emails">Results will appear here...</div>
+  </div>
+
+  <script>
+    async function searchEmails() {
+      const query = document.getElementById("query").value;
+      const output = document.getElementById("result");
+      if (!query) return alert("Please enter a search query.");
+
+      output.textContent = "Searching Google... please wait...";
+
+      const url = `https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(query)}&api_key=018a0f03ef6785f521d3d449086c7c9e189a14f63628f0ce5c6410ad7a991663`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (!data.organic_results) return output.textContent = "No results.";
+
+      const urls = data.organic_results.map(r => r.link);
+      const emails = new Set();
+
+      for (let link of urls.slice(0, 5)) {
+        try {
+          const html = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(link))
+            .then(res => res.json()).then(data => data.contents);
+          const found = [...html.matchAll(/[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}/g)].map(m => m[0]);
+          found.forEach(e => emails.add(e));
+        } catch (e) { console.log("Fetch failed for", link); }
+      }
+
+      if (emails.size === 0) output.textContent = "No emails found.";
+      else output.textContent = [...emails].join("\n");
+    }
+  </script>
 </body>
 </html>
