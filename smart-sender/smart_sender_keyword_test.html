@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🔍 SmartSender - Email Scraper Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 40px; max-width: 800px; margin: auto; }
+    input, button, textarea {
+      width: 100%; padding: 12px; margin-top: 10px;
+      font-size: 16px; border-radius: 6px; border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007bff; color: white; border: none; font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    textarea { height: 180px; }
+  </style>
+</head>
+<body>
+  <h2>🔍 SmartSender Real Email Scraper (Test)</h2>
+  <input id="query" placeholder='Enter keyword (e.g. plumbers "gmail.com")' />
+  <button onclick="searchEmails()">Search Emails</button>
+  <textarea id="results" placeholder="Results will appear here..."></textarea>
+
+  <script>
+    async function searchEmails() {
+      const q = document.getElementById("query").value.trim();
+      const out = document.getElementById("results");
+      if (!q) return alert("Please enter a keyword.");
+
+      out.value = "Searching... please wait...";
+
+      try {
+        const res = await fetch(`https://serpapi.com/search.json?engine=google&q=${encodeURIComponent(q)}&api_key=018a0f03ef6785f521d3d449086c7c9e189a14f63628f0ce5c6410ad7a991663`);
+        const data = await res.json();
+        if (!data.organic_results) return out.value = "❌ No results found.";
+
+        const links = data.organic_results.map(r => r.link);
+        const emails = new Set();
+
+        for (const url of links.slice(0, 5)) {
+          try {
+            const page = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(url));
+            const content = await page.json();
+            const html = content.contents;
+            const found = [...html.matchAll(/[\w._%+-]+@[\w.-]+\.[a-zA-Z]{2,}/g)].map(m => m[0]);
+            found.forEach(e => emails.add(e));
+          } catch {
+            console.log("Skipped", url);
+          }
+        }
+
+        if (emails.size === 0) out.value = "⚠ No emails found in first 5 results.";
+        else out.value = [...emails].join("\n");
+
+      } catch (err) {
+        out.value = "❌ Error: " + err;
+      }
+    }
+  </script>
+</body>
+</html>
