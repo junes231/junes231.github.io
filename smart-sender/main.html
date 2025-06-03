@@ -1,78 +1,72 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>📧 SmartSender Pro Panel</title>
+  <meta charset="UTF-8" />
+  <title>SmartSender</title>
   <style>
-    body { font-family: Arial; padding: 30px; background: #f7f9fc; }
-    h1 { color: #004aad; }
-    .section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 10px #ccc; }
-    input, textarea { width: 100%; padding: 10px; margin-top: 8px; font-size: 16px; }
-    button { padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    input, textarea, button { width: 100%; margin-top: 10px; padding: 10px; }
+    #statusMessage { margin-top: 20px; font-weight: bold; }
   </style>
 </head>
 <body>
-  <h1>📧 SmartSender Pro Panel</h1>
 
-  <div class="section">
-    <h2>🔍 Step 1: Keyword Email Scraper</h2>
-    <input id="keyword" placeholder='e.g. plumbers "gmail.com"'/>
-    <button onclick="searchEmails()">Search Emails</button>
-    <textarea id="results" rows="5" placeholder="Results will appear here..."></textarea>
-    <button onclick="exportCSV()">⬇️ Export to CSV</button>
-  </div>
+  <h2>📬 SmartSender Gmail 邮件群发系统</h2>
 
-  <div class="section">
-    <h2>👥 Step 2: Group Contacts</h2>
-    <input placeholder="Group: e.g. Plumbers, Electricians..."/>
-  </div>
+  <label for="gmailUser">Gmail 地址：</label>
+  <input type="email" id="gmailUser" placeholder="例如：yourname@gmail.com" />
 
-  <div class="section">
-    <h2>📮 Step 3: Gmail Bcc Sender</h2>
-    <input id="email" placeholder="Your Gmail"/>
-    <input id="password" placeholder="Gmail App Password"/>
-    <input id="subject" placeholder="Email Subject"/>
-    <textarea id="template" rows="5" placeholder="Plain text or HTML content here..."></textarea>
-    <button onclick="sendEmails()">🚀 Send with Bcc</button>
-    <p id="status"></p>
-  </div>
+  <label for="appPassword">Gmail 应用密码：</label>
+  <input type="password" id="appPassword" placeholder="16位应用密码" />
+
+  <label for="bccEmail">📥 测试收件人邮箱地址（Bcc）：</label>
+  <input type="email" id="bccEmail" placeholder="例如：cshiy98@gmail.com" />
+
+  <label for="subject">邮件主题：</label>
+  <input type="text" id="subject" placeholder="请输入邮件标题" />
+
+  <label for="body">邮件内容（支持 HTML）：</label>
+  <textarea id="body" rows="8" placeholder="例如：<h1>Hello!</h1><p>This is a test.</p>"></textarea>
+
+  <button onclick="sendEmail()">✉️ 发送测试邮件</button>
+
+  <div id="statusMessage"></div>
 
   <script>
-    function searchEmails() {
-      const kw = document.getElementById('keyword').value;
-      if (!kw) return alert("Enter keywords");
-      document.getElementById('results').value = `${kw}_contact1@gmail.com\n${kw}_info@gmail.com\n...demo only...`;
-    }
+    async function sendEmail() {
+      const user = document.getElementById('gmailUser').value.trim();
+      const pass = document.getElementById('appPassword').value.trim();
+      const bcc = document.getElementById('bccEmail').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const body = document.getElementById('body').value;
 
-    function exportCSV() {
-      const csvContent = document.getElementById('results').value;
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "emails.csv";
-      link.click();
-    }
+      const statusEl = document.getElementById('statusMessage');
+      statusEl.innerText = "⏳ 正在发送中，请稍候...";
 
-    function sendEmails() {
-      const emails = document.getElementById("results").value.split("\n").filter(Boolean);
-      const form = {
-        SecureToken: "YourTokenHere",
-        To: document.getElementById("email").value,
-        From: document.getElementById("email").value,
-        Subject: document.getElementById("subject").value,
-        Body: document.getElementById("template").value,
-        Bcc: emails.join(",")
-      };
-      if (window.Email) {
-        window.Email.send(form).then(() => {
-          document.getElementById("status").innerText = "✅ Emails Sent!";
+      if (!user || !pass || !bcc || !subject || !body) {
+        statusEl.innerText = "⚠️ 请填写所有字段后再尝试发送！";
+        return;
+      }
+
+      try {
+        const response = await fetch("https://smart-sender-api.vercel.app/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user, pass, bcc, subject, body })
         });
-      } else {
-        document.getElementById("status").innerText = "❌ Email.js not loaded.";
+
+        const result = await response.json();
+
+        if (result.success) {
+          statusEl.innerText = "✅ 邮件已成功发送！（请查收 Inbox 或 Spam）";
+        } else {
+          statusEl.innerText = "❌ 邮件发送失败：" + (result.message || "请检查应用密码是否正确");
+        }
+      } catch (error) {
+        statusEl.innerText = "❌ 网络错误或服务异常，请稍后重试";
       }
     }
   </script>
-  <script src="https://smtpjs.com/v3/smtp.js"></script>
 </body>
 </html>
